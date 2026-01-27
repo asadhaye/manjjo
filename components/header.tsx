@@ -13,7 +13,7 @@ export function Header() {
         <div className="flex items-center">
           <div className="overflow-hidden rounded-lg bg-black/90 px-3 py-1.5 shadow-md">
             <Image 
-              src="/images/manjjo-logo.jpg" 
+              src="/images/manjjo.png" 
               alt="Manjjo Logo" 
               width={140} 
               height={45}
