@@ -7,6 +7,67 @@ interface CartItem {
 
 export class WhatsAppCart {
   private items: CartItem[] = []
+  private readonly STORAGE_KEY = 'manjjo-cart'
+  private readonly STORAGE_VERSION = '1.0'
+  private readonly VERSION_KEY = 'manjjo-cart-version'
+
+  constructor() {
+    this.loadFromStorage()
+  }
+
+  private loadFromStorage() {
+    if (typeof window !== 'undefined') {
+      try {
+        // Check if this is a new version or first-time visitor
+        const currentVersion = localStorage.getItem(this.VERSION_KEY)
+        
+        // If version doesn't match or doesn't exist, clear old data
+        if (currentVersion !== this.STORAGE_VERSION) {
+          this.clearStorage()
+          localStorage.setItem(this.VERSION_KEY, this.STORAGE_VERSION)
+          return
+        }
+
+        const stored = localStorage.getItem(this.STORAGE_KEY)
+        if (stored) {
+          const parsedItems = JSON.parse(stored)
+          // Validate that stored data is valid cart items
+          if (Array.isArray(parsedItems) && parsedItems.every(item => 
+            typeof item.id === 'number' && 
+            typeof item.name === 'string' && 
+            typeof item.price === 'number' && 
+            typeof item.quantity === 'number'
+          )) {
+            this.items = parsedItems
+          } else {
+            // Clear invalid data
+            this.clearStorage()
+          }
+        }
+      } catch (error) {
+        console.error('Failed to load cart from storage:', error)
+        this.clearStorage()
+      }
+    }
+  }
+
+  private clearStorage() {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem(this.STORAGE_KEY)
+    }
+    this.items = []
+  }
+
+  private saveToStorage() {
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.items))
+        localStorage.setItem(this.VERSION_KEY, this.STORAGE_VERSION)
+      } catch (error) {
+        console.error('Failed to save cart to storage:', error)
+      }
+    }
+  }
 
   addItem(product: { id: number; name: string; price: number }) {
     const existingItem = this.items.find(item => item.id === product.id)
@@ -16,16 +77,19 @@ export class WhatsAppCart {
     } else {
       this.items.push({ ...product, quantity: 1 })
     }
+    this.saveToStorage()
   }
 
   removeItem(productId: number) {
     this.items = this.items.filter(item => item.id !== productId)
+    this.saveToStorage()
   }
 
   updateQuantity(productId: number, quantity: number) {
     const item = this.items.find(item => item.id === productId)
     if (item) {
       item.quantity = Math.max(1, quantity)
+      this.saveToStorage()
     }
   }
 
@@ -43,6 +107,7 @@ export class WhatsAppCart {
 
   clear() {
     this.items = []
+    this.saveToStorage()
   }
 
   generateWhatsAppMessage(phoneNumber: string = '923098009999', customerInfo?: { phone: string; address: string; deliveryTime: string }): string {

@@ -12,7 +12,7 @@ export function WhatsAppCartButton() {
     address: '',
     deliveryTime: 'ASAP'
   })
-  const { getTotalItems, getTotalPrice, getItems, removeFromCart, updateQuantity, shareToWhatsApp } = useCart()
+  const { getTotalItems, getTotalPrice, getItems, removeFromCart, updateQuantity, shareToWhatsApp, clearCart } = useCart()
 
   const items = getItems()
   const totalItems = getTotalItems()
@@ -49,12 +49,27 @@ export function WhatsAppCartButton() {
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b">
               <h2 className="text-lg font-semibold">Your Order</h2>
-              <button 
-                onClick={() => setIsOpen(false)}
-                className="p-1 hover:bg-gray-100 rounded"
-              >
-                <X className="h-5 w-5" />
-              </button>
+              <div className="flex items-center gap-2">
+                {items.length > 0 && (
+                  <button 
+                    onClick={() => {
+                      if (confirm('Clear all items from cart?')) {
+                        clearCart()
+                        setShowCustomerForm(false)
+                      }
+                    }}
+                    className="text-sm text-red-500 hover:text-red-700 font-medium"
+                  >
+                    Clear Cart
+                  </button>
+                )}
+                <button 
+                  onClick={() => setIsOpen(false)}
+                  className="p-1 hover:bg-gray-100 rounded"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
             </div>
 
             {/* Items */}
