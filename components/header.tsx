@@ -1,6 +1,7 @@
 "use client"
 
 import Image from "next/image"
+import Link from "next/link"
 import { WhatsAppCartButton } from "@/components/whatsapp-cart"
 
 export function Header() {
@@ -8,7 +9,7 @@ export function Header() {
     <header className="sticky top-0 z-50 bg-manjjo-red">
       <div className="flex items-center justify-between px-4 py-3">
         {/* Logo */}
-        <div className="flex items-center">
+        <Link href="/" className="flex items-center transition-opacity hover:opacity-80">
           <div className="overflow-hidden rounded-lg bg-black/90 px-3 py-1.5 shadow-md">
             <Image 
               src="/images/manjjo.png" 
@@ -19,7 +20,7 @@ export function Header() {
               priority
             />
           </div>
-        </div>
+        </Link>
 
         {/* WhatsApp Cart Button */}
         <WhatsAppCartButton />

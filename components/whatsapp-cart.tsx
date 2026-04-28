@@ -1,16 +1,30 @@
 "use client"
 
 import { useState } from "react"
-import { ShoppingCart, X, MessageCircle } from "lucide-react"
+import { ShoppingCart, X, MessageCircle, ArrowRight } from "lucide-react"
 import { useCart } from "@/contexts/cart-context"
 
 export function WhatsAppCartButton() {
   const [isOpen, setIsOpen] = useState(false)
+  const [showCustomerForm, setShowCustomerForm] = useState(false)
+  const [customerInfo, setCustomerInfo] = useState({
+    phone: '',
+    address: '',
+    deliveryTime: 'ASAP'
+  })
   const { getTotalItems, getTotalPrice, getItems, removeFromCart, updateQuantity, shareToWhatsApp } = useCart()
 
   const items = getItems()
   const totalItems = getTotalItems()
   const totalPrice = getTotalPrice()
+
+  const handleCustomerInfoSubmit = () => {
+    if (!customerInfo.phone.trim() || !customerInfo.address.trim()) {
+      alert('Please fill in your phone number and delivery address')
+      return
+    }
+    shareToWhatsApp(customerInfo)
+  }
 
   return (
     <>
@@ -89,13 +103,77 @@ export function WhatsAppCartButton() {
                   <span className="font-semibold">Total:</span>
                   <span className="text-xl font-bold text-manjjo-red">Rs. {totalPrice}</span>
                 </div>
-                <button
-                  onClick={shareToWhatsApp}
-                  className="w-full bg-green-500 text-white py-3 rounded-lg font-semibold hover:bg-green-600 transition-colors flex items-center justify-center gap-2"
-                >
-                  <MessageCircle className="h-5 w-5" />
-                  Order on WhatsApp
-                </button>
+                
+                {!showCustomerForm ? (
+                  <button
+                    onClick={() => setShowCustomerForm(true)}
+                    className="w-full bg-manjjo-red text-white py-3 rounded-lg font-semibold hover:bg-red-700 transition-colors flex items-center justify-center gap-2"
+                  >
+                    Continue to Checkout
+                    <ArrowRight className="h-5 w-5" />
+                  </button>
+                ) : (
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Phone Number *
+                      </label>
+                      <input
+                        type="tel"
+                        value={customerInfo.phone}
+                        onChange={(e) => setCustomerInfo(prev => ({ ...prev, phone: e.target.value }))}
+                        placeholder="0300 1234567"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-manjjo-red focus:border-transparent"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Delivery Address *
+                      </label>
+                      <textarea
+                        value={customerInfo.address}
+                        onChange={(e) => setCustomerInfo(prev => ({ ...prev, address: e.target.value }))}
+                        placeholder="House #123, Street XYZ, Lahore"
+                        rows={2}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-manjjo-red focus:border-transparent"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Delivery Time
+                      </label>
+                      <select
+                        value={customerInfo.deliveryTime}
+                        onChange={(e) => setCustomerInfo(prev => ({ ...prev, deliveryTime: e.target.value }))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-manjjo-red focus:border-transparent"
+                      >
+                        <option value="ASAP">ASAP</option>
+                        <option value="30 minutes">30 minutes</option>
+                        <option value="1 hour">1 hour</option>
+                        <option value="2 hours">2 hours</option>
+                        <option value="Custom">Custom time</option>
+                      </select>
+                    </div>
+                    
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => setShowCustomerForm(false)}
+                        className="flex-1 bg-gray-200 text-gray-800 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors"
+                      >
+                        Back
+                      </button>
+                      <button
+                        onClick={handleCustomerInfoSubmit}
+                        className="flex-1 bg-green-500 text-white py-3 rounded-lg font-semibold hover:bg-green-600 transition-colors flex items-center justify-center gap-2"
+                      >
+                        <MessageCircle className="h-5 w-5" />
+                        Order on WhatsApp
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>

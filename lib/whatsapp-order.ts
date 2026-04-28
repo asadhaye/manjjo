@@ -45,7 +45,7 @@ export class WhatsAppCart {
     this.items = []
   }
 
-  generateWhatsAppMessage(phoneNumber: string = '+923098009999'): string {
+  generateWhatsAppMessage(phoneNumber: string = '923098009999', customerInfo?: { phone: string; address: string; deliveryTime: string }): string {
     if (this.items.length === 0) return ''
 
     const message = [
@@ -59,13 +59,13 @@ export class WhatsAppCart {
       `💰 *Total: Rs. ${this.getTotalPrice()}*`,
       '',
       '📍 *Delivery Address:*',
-      '[Please add your address]',
+      customerInfo?.address || '[Please add your address]',
       '',
       '📞 *Contact Number:*',
-      '[Please add your phone number]',
+      customerInfo?.phone || '[Please add your phone number]',
       '',
       '⏰ *Delivery Time:*',
-      '[ASAP / Preferred time]'
+      customerInfo?.deliveryTime || '[ASAP / Preferred time]'
     ].join('\n')
 
     return `https://wa.me/${phoneNumber.replace(/[^\d]/g, '')}?text=${encodeURIComponent(message)}`
