@@ -1,12 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  typescript: {
-    ignoreBuildErrors: true,
-  },
   images: {
-    unoptimized: true,
+    // Enable image optimization in production; keep disabled in dev if necessary
+    unoptimized: false,
   },
- 
+  
 }
 
 export default nextConfig

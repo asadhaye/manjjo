@@ -3,6 +3,7 @@
 import { useState } from "react"
 import Image from "next/image"
 import { Plus } from "lucide-react"
+import { useCart } from "@/contexts/cart-context"
 
 interface Product {
   id: number
@@ -91,6 +92,16 @@ const menuData: Category[] = [
 ]
 
 function ProductCard({ product }: { product: Product }) {
+  const { addToCart } = useCart()
+
+  const handleAddToCart = () => {
+    addToCart({
+      id: product.id,
+      name: product.name,
+      price: product.price
+    })
+  }
+
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden relative">
       {/* Image Section */}
@@ -105,6 +116,7 @@ function ProductCard({ product }: { product: Product }) {
         {/* Add Button - overlapping bottom right of image */}
         <button
           type="button"
+          onClick={handleAddToCart}
           className="absolute -bottom-5 right-4 w-10 h-10 bg-manjjo-red rounded-full flex items-center justify-center shadow-lg hover:bg-red-700 transition-colors active:scale-95"
           aria-label={`Add ${product.name} to cart`}
         >
