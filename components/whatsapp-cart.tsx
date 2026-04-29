@@ -36,7 +36,7 @@ export function WhatsAppCartButton() {
       >
         <ShoppingCart className="h-6 w-6 text-white" />
         {totalItems > 0 && (
-          <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-manjjo-yellow text-xs font-bold text-black">
+          <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-manjjo-yellow text-xs font-bold text-black animate-pulse">
             {totalItems > 9 ? "9+" : totalItems}
           </span>
         )}
