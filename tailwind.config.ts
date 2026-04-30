@@ -13,6 +13,7 @@ const config: Config = {
         // Manjjo Brand Colors
         'manjjo-red': '#DC2626',      // Primary red for buttons, accents
         'manjjo-yellow': '#FFC107',   // Secondary yellow for highlights
+        'manjjo-orange': '#FFAE42',   // Orange for Order Now text
         'manjjo-dark': '#1A1A1A',     // Dark text, backgrounds
         'manjjo-light': '#F5F5F5',     // Light backgrounds, cards
         'manjjo-gray': '#6B7280',     // Muted text, borders

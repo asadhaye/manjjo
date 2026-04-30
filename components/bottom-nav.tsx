@@ -13,11 +13,21 @@ export function BottomNav() {
     window.open(`https://wa.me/923098009999?text=${message}`, "_blank")
   }
 
+  const handleMenuClick = () => {
+    const menuSection = document.querySelector('section')
+    if (menuSection) {
+      menuSection.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
+
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-manjjo-gray bg-white px-4 py-3 shadow-[0_-2px_10px_rgba(0,0,0,0.1)]">
       <div className="flex items-center gap-3 max-w-md mx-auto md:max-w-2xl">
         {/* Menu Button */}
-        <button className="flex items-center gap-2 text-manjjo-gray hover:text-manjjo-red transition-colors">
+        <button 
+          onClick={handleMenuClick}
+          className="flex items-center gap-2 text-manjjo-gray hover:text-manjjo-red transition-colors"
+        >
           <Menu className="w-5 h-5" />
           <span className="text-sm font-medium">Menu</span>
         </button>
@@ -37,7 +47,7 @@ export function BottomNav() {
           ) : (
             <div className="text-center">
               <Home className="w-5 h-5 mx-auto text-manjjo-gray mb-1" />
-              <p className="text-xs text-manjjo-gray">Order Now</p>
+              <p className="text-xs text-manjjo-orange font-bold">Order Now</p>
             </div>
           )}
         </div>
