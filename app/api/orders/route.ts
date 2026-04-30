@@ -4,9 +4,26 @@ import { OrderData } from '@/lib/google-sheets'
 
 const SPREADSHEET_ID = '1CwKLE5LgCP4IUx0yT6eSnKOpGzFHzeIVdg6ZYZ4LlAo'
 
+function getCredentials() {
+  const key = process.env.GOOGLE_SERVICE_ACCOUNT_KEY
+  if (!key || key === 'your_service_account_key_json_here') {
+    throw new Error('GOOGLE_SERVICE_ACCOUNT_KEY is not set in environment variables')
+  }
+  try {
+    return JSON.parse(key)
+  } catch {
+    throw new Error(
+      'GOOGLE_SERVICE_ACCOUNT_KEY is not valid JSON. ' +
+      'You must paste the entire service account key JSON file content, ' +
+      'not just the private key portion.'
+    )
+  }
+}
+
 async function getGoogleSheetsClient() {
+  const credentials = getCredentials()
   const auth = new google.auth.GoogleAuth({
-    credentials: JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_KEY || '{}'),
+    credentials,
     scopes: ['https://www.googleapis.com/auth/spreadsheets']
   })
   const sheets = google.sheets({ version: 'v4', auth })
@@ -17,9 +34,9 @@ export async function POST(request: Request) {
   try {
     const orderData: OrderData = await request.json()
     const sheets = await getGoogleSheetsClient()
-    
+
     console.log('Saving order to Google Sheets:', orderData)
-    
+
     // Append order to the "Orders" sheet
     const response = await sheets.spreadsheets.values.append({
       spreadsheetId: SPREADSHEET_ID,
@@ -43,16 +60,17 @@ export async function POST(request: Request) {
     })
 
     console.log('Order saved successfully to Google Sheets')
-    
-    return NextResponse.json({ 
-      success: true, 
+
+    return NextResponse.json({
+      success: true,
       orderId: orderData.orderId,
-      message: 'Order saved successfully' 
+      message: 'Order saved successfully'
     })
   } catch (error) {
     console.error('Error saving order to Google Sheets:', error)
+    const message = error instanceof Error ? error.message : 'Unknown error'
     return NextResponse.json(
-      { error: 'Failed to save order to Google Sheets' },
+      { error: 'Failed to save order to Google Sheets', details: message },
       { status: 500 }
     )
   }
