@@ -108,7 +108,7 @@ export default function ProductGrid() {
   const currentCategory = menuData.find((cat) => cat.id === activeCategory) || menuData[0]
 
   return (
-    <section className="bg-[#F9F9F9] py-8 px-4 md:px-8">
+    <section id="menu-section" className="bg-[#F9F9F9] py-8 px-4 md:px-8">
       <div className="max-w-6xl mx-auto">
         <h2 className="text-2xl md:text-3xl font-bold text-black mb-4">
           Our Menu

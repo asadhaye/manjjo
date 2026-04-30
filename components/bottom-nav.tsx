@@ -14,7 +14,7 @@ export function BottomNav() {
   }
 
   const handleMenuClick = () => {
-    const menuSection = document.querySelector('section')
+    const menuSection = document.getElementById('menu-section')
     if (menuSection) {
       menuSection.scrollIntoView({ behavior: 'smooth' })
     }
