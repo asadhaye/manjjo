@@ -6,7 +6,7 @@ import { WhatsAppCartButton } from "@/components/whatsapp-cart"
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-50 bg-manjjo-red">
+    <header className="sticky top-0 z-50 bg-manjjo-orange">
       <div className="flex items-center justify-between px-4 py-3">
         {/* Logo */}
         <Link href="/" className="flex items-center transition-opacity hover:opacity-80">
