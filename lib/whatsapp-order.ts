@@ -1,3 +1,5 @@
+import { saveOrderData, generateOrderId, OrderData } from './google-sheets'
+
 interface CartItem {
   id: number
   name: string
@@ -112,6 +114,24 @@ export class WhatsAppCart {
 
   generateWhatsAppMessage(phoneNumber: string = '923098009999', customerInfo?: { phone: string; address: string; deliveryTime: string }): string {
     if (this.items.length === 0) return ''
+
+    const orderId = generateOrderId()
+    const orderData: OrderData = {
+      orderId,
+      customerName: customerInfo?.phone || '',
+      phoneNumber: customerInfo?.phone || '',
+      deliveryAddress: customerInfo?.address || '',
+      deliveryTime: customerInfo?.deliveryTime || 'ASAP',
+      items: this.items,
+      totalPrice: this.getTotalPrice(),
+      status: 'pending',
+      timestamp: new Date().toISOString()
+    }
+    
+    // Save order to Google Sheets
+    saveOrderData(orderData).catch(error => {
+      console.error('Failed to save order to Google Sheets:', error)
+    })
 
     const message = [
       '🍔 *Manjjo Food Order*',
