@@ -21,12 +21,12 @@ export function BottomNav() {
   }
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-manjjo-gray bg-white px-4 py-3 shadow-[0_-2px_10px_rgba(0,0,0,0.1)]">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-white/20 px-4 py-3 shadow-[0_-2px_10px_rgba(0,0,0,0.1)]" style={{ backgroundColor: '#FFAE42' }}>
       <div className="flex items-center gap-3 max-w-md mx-auto md:max-w-2xl">
         {/* Menu Button */}
-        <button 
+        <button
           onClick={handleMenuClick}
-          className="flex items-center gap-2 text-manjjo-gray hover:text-manjjo-red transition-colors"
+          className="flex items-center gap-2 text-dark hover:text-black transition-colors"
         >
           <Menu className="w-5 h-5" />
           <span className="text-sm font-medium">Menu</span>
@@ -36,18 +36,18 @@ export function BottomNav() {
         <div className="flex-1 text-center">
           {totalItems > 0 ? (
             <div className="flex items-center justify-center gap-2">
-              <ShoppingCart className="w-5 h-5 text-manjjo-red" />
+              <ShoppingCart className="w-5 h-5 text-black" />
               <div className="text-sm">
-                <span className="font-bold text-manjjo-red">{totalItems}</span>
-                <span className="text-manjjo-gray"> items</span>
-                <span className="text-manjjo-gray"> | </span>
-                <span className="font-bold text-manjjo-red">Rs. {totalPrice}</span>
+                <span className="font-bold text-black">{totalItems}</span>
+                <span className="text-dark/80"> items</span>
+                <span className="text-dark/80"> | </span>
+                <span className="font-bold text-black">Rs. {totalPrice}</span>
               </div>
             </div>
           ) : (
             <div className="text-center">
-              <Home className="w-5 h-5 mx-auto text-manjjo-gray mb-1" />
-              <p className="text-xs text-manjjo-orange font-bold">Order Now</p>
+              <Home className="w-5 h-5 mx-auto text-dark mb-1" />
+              <p className="text-xs text-black font-bold">Order Now</p>
             </div>
           )}
         </div>
@@ -55,7 +55,7 @@ export function BottomNav() {
         {/* WhatsApp Order Button */}
         <button
           onClick={handleWhatsAppOrder}
-          className="bg-manjjo-red text-white py-3 px-4 rounded-lg font-bold text-sm uppercase tracking-wide transition-all duration-200 hover:bg-red-700 active:scale-95 shadow-lg"
+          className="bg-black text-white py-3 px-4 rounded-lg font-bold text-sm uppercase tracking-wide transition-all duration-200 hover:bg-gray-800 active:scale-95 shadow-lg"
         >
           Order on WhatsApp
         </button>

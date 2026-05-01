@@ -6,12 +6,14 @@ import { BottomNav } from "@/components/bottom-nav"
 
 export default function Home() {
   return (
-    <main className="min-h-screen pb-24">
-      <Header />
-      <Hero />
-      <ProductGrid />
-      <Footer />
+    <>
+      <main className="min-h-screen">
+        <Header />
+        <Hero />
+        <ProductGrid />
+        <Footer />
+      </main>
       <BottomNav />
-    </main>
+    </>
   )
 }

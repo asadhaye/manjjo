@@ -24,7 +24,7 @@ export function Footer() {
             rel="noopener noreferrer"
             className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors text-center"
           >
-            <MapPin className="h-5 w-5 shrink-0 text-manjjo-red" style={{ color: "#E31C25" }} />
+            <MapPin className="h-5 w-5 shrink-0 text-manjjo-red" style={{ color: "#FFAE42" }} />
             <span className="text-sm">24 D Block Rd, Block D Punjab CHS, Lahore, Pakistan</span>
           </a>
           
@@ -32,7 +32,7 @@ export function Footer() {
             href="tel:03098009999"
             className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors"
           >
-            <Phone className="h-5 w-5 shrink-0" style={{ color: "#E31C25" }} />
+            <Phone className="h-5 w-5 shrink-0" style={{ color: "#FFAE42" }} />
             <span className="text-sm font-medium">0309 8009999</span>
           </a>
         </div>

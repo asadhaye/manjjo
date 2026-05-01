@@ -2,9 +2,54 @@
 
 import { useState, useEffect } from "react"
 import Image from "next/image"
-import { Plus, X } from "lucide-react"
+import { Plus, X, ImageOff } from "lucide-react"
 import { useCart } from "@/contexts/cart-context"
 import { fetchMenuData, MenuItem } from "@/lib/google-sheets"
+
+// Convert Google Drive File IDs or sharing links to reliable thumbnail URLs
+function getImageUrl(src: string | undefined): string {
+  if (!src) return "/placeholder.svg"
+
+  // If it's already a direct image URL, use it
+  if (src.includes("googleusercontent.com") || src.includes("/thumbnail?id=")) {
+    return src
+  }
+
+  // Extract Google Drive File ID from sharing link or plain ID
+  const driveMatch = src.match(/([a-zA-Z0-9_-]{25,})/)
+  if (driveMatch) {
+    // Use Google Drive thumbnail API - works for publicly shared images
+    return `https://drive.google.com/thumbnail?id=${driveMatch[1]}&sz=w1000`
+  }
+
+  return src
+}
+
+// ProductImage component with error fallback
+function ProductImage({ src, alt }: { src: string | undefined; alt: string }) {
+  const [error, setError] = useState(false)
+  const imageUrl = getImageUrl(src)
+
+  if (error) {
+    return (
+      <div className="w-full h-full flex flex-col items-center justify-center bg-gray-100 text-gray-400">
+        <ImageOff className="w-8 h-8 mb-2" />
+        <span className="text-xs text-center px-2">{alt}</span>
+      </div>
+    )
+  }
+
+  return (
+    <Image
+      src={imageUrl}
+      alt={alt}
+      fill
+      className="object-cover group-hover:scale-105 transition-transform duration-300"
+      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+      onError={() => setError(true)}
+    />
+  )
+}
 
 interface Product {
   id: number
@@ -175,14 +220,8 @@ function ProductCard({ product }: { product: Product }) {
     <>
       <div className="bg-white rounded-xl shadow-md overflow-hidden relative group hover:shadow-xl transition-shadow duration-300">
         {/* Image Section */}
-        <div className="relative aspect-square overflow-hidden">
-          <Image
-            src={product.image || "/placeholder.svg"}
-            alt={product.name}
-            fill
-            className="object-cover group-hover:scale-105 transition-transform duration-300"
-            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          />
+        <div className="relative aspect-square overflow-hidden bg-gray-100">
+          <ProductImage src={product.image} alt={product.name} />
           {/* Add Button - overlapping bottom right of image */}
           <button
             type="button"
