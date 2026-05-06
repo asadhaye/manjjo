@@ -7,14 +7,14 @@ import { WhatsAppCartButton } from "@/components/whatsapp-cart"
 export function Header() {
   return (
     <header className="sticky top-0 z-50" style={{ backgroundColor: '#FFAE42' }}>
-      <div className="flex items-center justify-between px-4 py-3">
-        {/* Logo */}
+      <div className="flex items-center justify-center relative px-4 py-3">
+        {/* Logo - centered */}
         <Link href="/" className="flex items-center transition-opacity hover:opacity-80">
           <div className="overflow-hidden rounded-lg bg-black/90 px-3 py-1.5 shadow-md">
-            <Image 
-              src="/images/manjjo.png" 
-              alt="Manjjo Logo" 
-              width={140} 
+            <Image
+              src="/images/manjjo.png"
+              alt="Manjjo Logo"
+              width={140}
               height={45}
               className="h-9 w-auto object-contain"
               priority
@@ -22,8 +22,10 @@ export function Header() {
           </div>
         </Link>
 
-        {/* WhatsApp Cart Button */}
-        <WhatsAppCartButton />
+        {/* WhatsApp Cart Button - absolute right */}
+        <div className="absolute right-4">
+          <WhatsAppCartButton />
+        </div>
       </div>
     </header>
   )

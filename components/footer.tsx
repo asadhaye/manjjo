@@ -10,8 +10,8 @@ export function Footer() {
           <Image
             src="/images/manjjo-logo.jpg"
             alt="Manjjo Logo"
-            width={160}
-            height={50}
+            width={280}
+            height={90}
             className="h-12 w-auto object-contain"
           />
         </div>

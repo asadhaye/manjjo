@@ -44,6 +44,15 @@ export async function GET() {
 
     // Convert rows to menu items
     const menuData = rows.map((row, index) => {
+      const parseJSON = (value: any) => {
+        if (!value || value === '' || value === '[]' || value === '{}') return []
+        try {
+          return JSON.parse(value)
+        } catch {
+          return []
+        }
+      }
+
       return {
         id: parseInt(row[0]) || index + 1,
         name: row[1] || '',
@@ -52,9 +61,9 @@ export async function GET() {
         description: row[4] || '',
         category: row[5] || 'other',
         variations: {
-          sizes: row[6] ? JSON.parse(row[6]) : [],
-          spiceLevels: row[7] ? JSON.parse(row[7]) : [],
-          toppings: row[8] ? JSON.parse(row[8]) : []
+          sizes: parseJSON(row[6]),
+          spiceLevels: parseJSON(row[7]),
+          toppings: parseJSON(row[8])
         }
       }
     })
