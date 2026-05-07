@@ -34,7 +34,7 @@ export function WhatsAppCartButton() {
         className="relative p-2 transition-transform hover:scale-105 active:scale-95"
         aria-label={`Shopping cart with ${totalItems} items`}
       >
-        <ShoppingCart className="h-6 w-6 text-white" />
+        <ShoppingCart className="h-6 w-6 text-black" />
         {totalItems > 0 && (
           <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-manjjo-yellow text-xs font-bold text-black animate-pulse">
             {totalItems > 9 ? "9+" : totalItems}

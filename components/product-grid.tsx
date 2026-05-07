@@ -87,7 +87,7 @@ export default function ProductGrid() {
   const [menuData, setMenuData] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [activeCategory, setActiveCategory] = useState('burgers')
+  const [activeCategory, setActiveCategory] = useState('')
 
   useEffect(() => {
     async function loadMenuData() {
@@ -95,9 +95,9 @@ export default function ProductGrid() {
         setLoading(true)
         const items: MenuItem[] = await fetchMenuData()
         
-        // Group items by category
+        // Group items by category (trim whitespace to avoid duplicates)
         const groupedData = items.reduce((acc: Category[], item) => {
-          const categoryName = item.category || 'other'
+          const categoryName = (item.category || 'other').trim().toLowerCase()
           const existingCategory = acc.find(cat => cat.id === categoryName)
           
           if (existingCategory) {
@@ -114,6 +114,9 @@ export default function ProductGrid() {
         }, [])
         
         setMenuData(groupedData)
+        if (groupedData.length > 0) {
+          setActiveCategory(groupedData[0].id)
+        }
       } catch (err) {
         console.error('Error loading menu data:', err)
         setError('Failed to load menu data')
@@ -123,6 +126,17 @@ export default function ProductGrid() {
     }
 
     loadMenuData()
+
+    // Listen for category changes from bottom nav
+    const handleCategoryChange = (event: CustomEvent) => {
+      setActiveCategory(event.detail)
+    }
+
+    window.addEventListener('categoryChange', handleCategoryChange as EventListener)
+
+    return () => {
+      window.removeEventListener('categoryChange', handleCategoryChange as EventListener)
+    }
   }, [])
 
   if (loading) {
@@ -152,23 +166,61 @@ export default function ProductGrid() {
 
   const currentCategory = menuData.find((cat) => cat.id === activeCategory) || menuData[0]
 
+  const handlePrevCategory = () => {
+    const currentIndex = menuData.findIndex(cat => cat.id === activeCategory)
+    const prevIndex = currentIndex > 0 ? currentIndex - 1 : menuData.length - 1
+    setActiveCategory(menuData[prevIndex].id)
+    window.dispatchEvent(new CustomEvent('categoryChange', { detail: menuData[prevIndex].id }))
+  }
+
+  const handleNextCategory = () => {
+    const currentIndex = menuData.findIndex(cat => cat.id === activeCategory)
+    const nextIndex = currentIndex < menuData.length - 1 ? currentIndex + 1 : 0
+    setActiveCategory(menuData[nextIndex].id)
+    window.dispatchEvent(new CustomEvent('categoryChange', { detail: menuData[nextIndex].id }))
+  }
+
   return (
-    <section id="menu-section" className="bg-[#F9F9F9] py-8 px-4 md:px-8">
+    <section id="menu-section" className="bg-[#F9F9F9] py-8 px-4 md:px-8 pb-32">
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-2xl md:text-3xl font-bold text-black mb-4">
-          Our Menu
-        </h2>
-        
-        {/* Category Tabs */}
-        <CategoryTabs 
-          categories={menuData} 
-          activeCategory={activeCategory}
-          onCategoryChange={setActiveCategory}
-        />
+        <div className="flex flex-col items-center mb-6">
+          <h2 className="text-2xl md:text-3xl font-bold text-black mb-4">
+            Our Menu
+          </h2>
+          
+          {/* Category Selector with Arrows */}
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handlePrevCategory}
+              className="w-10 h-10 rounded-full bg-white border-2 border-manjjo-gray flex items-center justify-center hover:bg-gray-100 transition-colors"
+              aria-label="Previous category"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            
+            <div className="bg-white border-2 border-manjjo-gray rounded-full px-6 py-2 min-w-[150px] text-center">
+              <span className="font-semibold text-black">
+                {currentCategory?.name || 'Menu'}
+              </span>
+            </div>
+            
+            <button
+              onClick={handleNextCategory}
+              className="w-10 h-10 rounded-full bg-white border-2 border-manjjo-gray flex items-center justify-center hover:bg-gray-100 transition-colors"
+              aria-label="Next category"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+        </div>
         
         {/* Products Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {currentCategory.products.map((product) => (
+          {currentCategory?.products.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
@@ -222,16 +274,6 @@ function ProductCard({ product }: { product: Product }) {
         {/* Image Section */}
         <div className="relative aspect-square overflow-hidden bg-gray-100">
           <ProductImage src={product.image} alt={product.name} />
-          {/* Add Button - overlapping bottom right of image */}
-          <button
-            type="button"
-            onClick={() => setShowVariationModal(true)}
-            className="absolute -bottom-5 right-4 w-10 h-10 bg-manjjo-red rounded-full flex items-center justify-center shadow-lg hover:bg-red-700 transition-all duration-200 active:scale-95 group-hover:scale-110"
-            aria-label={`Customize ${product.name}`}
-          >
-            <Plus className="w-5 h-5 text-white transition-transform duration-200" />
-          </button>
-          
           {/* Badge for new/popular items */}
           {(product.id <= 5 || product.basePrice >= 1000) && (
             <div className="absolute top-2 left-2 bg-manjjo-yellow text-black text-xs font-bold px-2 py-1 rounded-full">
@@ -241,7 +283,7 @@ function ProductCard({ product }: { product: Product }) {
         </div>
 
         {/* Content Section */}
-        <div className="p-4 pt-6">
+        <div className="p-4">
           <div className="flex items-start justify-between mb-2">
             <h3 className="font-bold text-black text-lg leading-tight flex-1">{product.name}</h3>
             <div className="flex items-center gap-1">
@@ -260,6 +302,16 @@ function ProductCard({ product }: { product: Product }) {
               <span className="text-xs text-manjjo-gray font-medium">In Stock</span>
             </div>
           </div>
+          {/* Add to Cart Button */}
+          <button
+            type="button"
+            onClick={() => setShowVariationModal(true)}
+            className="w-full mt-4 bg-manjjo-red text-white py-3 rounded-lg font-medium hover:bg-red-700 transition-colors flex items-center justify-center gap-2"
+            aria-label={`Customize ${product.name}`}
+          >
+            <Plus className="w-5 h-5" />
+            Add
+          </button>
         </div>
       </div>
 
@@ -349,34 +401,5 @@ function ProductCard({ product }: { product: Product }) {
         </div>
       )}
     </>
-  )
-}
-
-function CategoryTabs({ 
-  categories, 
-  activeCategory, 
-  onCategoryChange 
-}: { 
-  categories: Category[]
-  activeCategory: string
-  onCategoryChange: (id: string) => void
-}) {
-  return (
-    <div className="flex gap-2 overflow-x-auto pb-4 scrollbar-hide -mx-4 px-4 md:mx-0 md:flex-wrap">
-      {categories.map((category) => (
-        <button
-          key={category.id}
-          type="button"
-          onClick={() => onCategoryChange(category.id)}
-          className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-200 border-2 border-manjjo-gray hover:border-manjjo-red ${
-            activeCategory === category.id
-              ? "bg-manjjo-red text-white shadow-lg"
-              : "bg-white text-manjjo-gray hover:bg-manjjo-light hover:border-manjjo-red"
-          }`}
-        >
-          {category.name}
-        </button>
-      ))}
-    </div>
   )
 }

@@ -14,22 +14,16 @@ export const metadata: Metadata = {
   title: 'Manjjo - Best Fast Food in Lahore',
   description: 'Cravings Met? Order the best fast food in Lahore from Manjjo.',
   generator: 'v0.app',
+  manifest: '/manifest.json',
   icons: {
-    icon: [
-      {
-        url: '/icon-light-32x32.png',
-        media: '(prefers-color-scheme: light)',
-      },
-      {
-        url: '/icon-dark-32x32.png',
-        media: '(prefers-color-scheme: dark)',
-      },
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
-      },
-    ],
-    apple: '/apple-icon.png',
+    icon: '/images/manjjo.png',
+    apple: '/images/manjjo.png',
+  },
+  themeColor: '#FFAE42',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'Manjjo',
   },
 }
 

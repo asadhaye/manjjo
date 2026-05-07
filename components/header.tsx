@@ -3,27 +3,44 @@
 import Image from "next/image"
 import Link from "next/link"
 import { WhatsAppCartButton } from "@/components/whatsapp-cart"
+import { Menu } from "lucide-react"
 
 export function Header() {
+  const handleMenuClick = () => {
+    const menuSection = document.getElementById('menu-section')
+    if (menuSection) {
+      menuSection.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
+
   return (
     <header className="sticky top-0 z-50" style={{ backgroundColor: '#FFAE42' }}>
-      <div className="flex items-center justify-center relative px-4 py-3">
+      <div className="flex items-center justify-between relative px-4 py-3">
+        {/* Menu Button - left */}
+        <button
+          onClick={handleMenuClick}
+          className="flex items-center gap-2 text-black hover:text-gray-800 transition-colors"
+        >
+          <Menu className="w-6 h-6" />
+          <span className="text-sm font-medium">Menu</span>
+        </button>
+
         {/* Logo - centered */}
         <Link href="/" className="flex items-center transition-opacity hover:opacity-80">
-          <div className="overflow-hidden rounded-lg bg-black/90 px-3 py-1.5 shadow-md">
+          <div className="overflow-hidden rounded-lg px-3 py-1.5">
             <Image
-              src="/images/manjjo.png"
+              src="/images/manjjo-removebg.png"
               alt="Manjjo Logo"
-              width={140}
-              height={45}
-              className="h-9 w-auto object-contain"
+              width={147}
+              height={47}
+              className="h-10 w-auto object-contain"
               priority
             />
           </div>
         </Link>
 
-        {/* WhatsApp Cart Button - absolute right */}
-        <div className="absolute right-4">
+        {/* WhatsApp Cart Button - right */}
+        <div>
           <WhatsAppCartButton />
         </div>
       </div>
