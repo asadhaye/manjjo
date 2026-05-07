@@ -55,10 +55,10 @@ export function PWAInstallPrompt() {
   return (
     <button
       onClick={handleInstallClick}
-      className="flex items-center gap-2 bg-black text-white px-4 py-2 rounded-lg font-medium hover:bg-gray-800 transition-colors"
+      className="p-2 text-black hover:text-gray-700 transition-colors"
+      aria-label="Install app"
     >
-      <Download className="w-4 h-4" />
-      <span className="text-sm">Install App</span>
+      <Download className="w-6 h-6" />
     </button>
   )
 }
