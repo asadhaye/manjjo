@@ -307,7 +307,7 @@ function ProductCard({ product }: { product: Product }) {
             type="button"
             onClick={() => setShowVariationModal(true)}
             className="w-full mt-4 bg-manjjo-red text-white py-3 rounded-lg font-medium hover:bg-red-700 transition-colors flex items-center justify-center gap-2"
-            aria-label={`Customize ${product.name}`}
+            aria-label={`Add ${product.name} to cart`}
           >
             <Plus className="w-5 h-5" />
             Add

@@ -64,7 +64,7 @@ export function Footer() {
         </div>
 
         {/* Copyright */}
-        <div className="text-center text-gray-500 text-xs border-t border-gray-700 pt-6">
+        <div className="text-center text-gray-400 text-xs border-t border-gray-700 pt-6">
           <p>&copy; {new Date().getFullYear()} Manjjo by Zamzam. All rights reserved.</p>
         </div>
       </div>
