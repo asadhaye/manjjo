@@ -3,6 +3,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { WhatsAppCartButton } from "@/components/whatsapp-cart"
+import { PWAInstallPrompt } from "@/components/pwa-install-prompt"
 import { Menu } from "lucide-react"
 
 export function Header() {
@@ -39,8 +40,9 @@ export function Header() {
           </div>
         </Link>
 
-        {/* WhatsApp Cart Button - right */}
-        <div>
+        {/* Right side - Install App and Cart */}
+        <div className="flex items-center gap-3">
+          <PWAInstallPrompt />
           <WhatsAppCartButton />
         </div>
       </div>
