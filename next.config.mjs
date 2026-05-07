@@ -15,14 +15,14 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-      {
-        protocol: 'https',
         hostname: 'work.fife.usercontent.google.com',
       },
       {
         protocol: 'https',
         hostname: 'gemini.google.com',
       },
+      {
+        protocol: 'https',
         hostname: '**.googleusercontent.com',
       },
     ],
