@@ -8,7 +8,7 @@ export function Footer() {
         {/* Logo */}
         <div className="flex justify-center mb-6">
           <Image
-            src="/images/manjjo-logo.jpg"
+            src="/images/MANJJO LUBAB.png"
             alt="Manjjo Logo"
             width={280}
             height={90}

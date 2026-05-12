@@ -53,6 +53,15 @@ export async function GET() {
         }
       }
 
+      // Parse sizes from columns G-J (name/price pairs)
+      const sizes = []
+      if (row[6] && row[7]) {
+        sizes.push({ name: row[6], price: parseFloat(row[7]) || 0 })
+      }
+      if (row[8] && row[9]) {
+        sizes.push({ name: row[8], price: parseFloat(row[9]) || 0 })
+      }
+
       return {
         id: parseInt(row[0]) || index + 1,
         name: row[1] || '',
@@ -61,9 +70,9 @@ export async function GET() {
         description: row[4] || '',
         category: row[5] || 'other',
         variations: {
-          sizes: parseJSON(row[6]),
-          spiceLevels: parseJSON(row[7]),
-          toppings: parseJSON(row[8])
+          sizes: sizes,
+          spiceLevels: parseJSON(row[10]),
+          toppings: parseJSON(row[11])
         }
       }
     })

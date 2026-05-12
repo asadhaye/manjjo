@@ -1,8 +1,9 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { ShoppingCart, X, MessageCircle, ArrowRight } from "lucide-react"
 import { useCart } from "@/contexts/cart-context"
+import { validateDeliveryAddress } from "@/lib/geocoding"
 
 export function WhatsAppCartButton() {
   const [isOpen, setIsOpen] = useState(false)
@@ -12,30 +13,66 @@ export function WhatsAppCartButton() {
     address: '',
     deliveryTime: 'ASAP'
   })
+  const [mounted, setMounted] = useState(false)
+  const [addressError, setAddressError] = useState('')
   const { getTotalItems, getTotalPrice, getItems, removeFromCart, updateQuantity, shareToWhatsApp, clearCart } = useCart()
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const items = getItems()
   const totalItems = getTotalItems()
   const totalPrice = getTotalPrice()
 
   const handleCustomerInfoSubmit = () => {
-    if (!customerInfo.phone.trim() || !customerInfo.address.trim()) {
-      alert('Please fill in your phone number and delivery address')
+    // Validate phone number (Pakistani format: 03XXXXXXXXX)
+    const phoneRegex = /^03[0-9]{9}$/
+    const cleanedPhone = customerInfo.phone.replace(/[\s-]/g, '')
+    
+    if (!cleanedPhone) {
+      alert('Please enter your phone number')
       return
     }
-    shareToWhatsApp(customerInfo)
+    
+    if (!phoneRegex.test(cleanedPhone)) {
+      alert('Please enter a valid Pakistani phone number (format: 03XXXXXXXXX)')
+      return
+    }
+    
+    // Validate address
+    if (!customerInfo.address.trim()) {
+      alert('Please enter your delivery address')
+      return
+    }
+    
+    if (customerInfo.address.trim().length < 10) {
+      alert('Please enter a complete delivery address (at least 10 characters)')
+      return
+    }
+    
+    // Tehsil-based validation for Lahore (no API required)
+    const validation = validateDeliveryAddress(customerInfo.address)
+    
+    if (!validation.valid) {
+      setAddressError(validation.message)
+      return
+    }
+    
+    // Address is valid, proceed with order
+    shareToWhatsApp({ ...customerInfo, phone: cleanedPhone })
   }
 
   return (
     <>
       {/* Cart Button */}
-      <button 
+      <button
         onClick={() => setIsOpen(true)}
         className="relative p-2 transition-transform hover:scale-105 active:scale-95"
         aria-label={`Shopping cart with ${totalItems} items`}
       >
         <ShoppingCart className="h-6 w-6 text-black" />
-        {totalItems > 0 && (
+        {mounted && totalItems > 0 && (
           <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-manjjo-yellow text-xs font-bold text-black animate-pulse">
             {totalItems > 9 ? "9+" : totalItems}
           </span>
@@ -148,11 +185,19 @@ export function WhatsAppCartButton() {
                       </label>
                       <textarea
                         value={customerInfo.address}
-                        onChange={(e) => setCustomerInfo(prev => ({ ...prev, address: e.target.value }))}
+                        onChange={(e) => {
+                          setCustomerInfo(prev => ({ ...prev, address: e.target.value }))
+                          setAddressError('')
+                        }}
                         placeholder="House #123, Street XYZ, Lahore"
                         rows={2}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-manjjo-red focus:border-transparent"
+                        className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-manjjo-red focus:border-transparent ${
+                          addressError ? 'border-red-500' : 'border-gray-300'
+                        }`}
                       />
+                      {addressError && (
+                        <p className="mt-1 text-sm text-red-600">{addressError}</p>
+                      )}
                     </div>
                     
                     <div>

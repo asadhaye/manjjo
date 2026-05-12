@@ -1,6 +1,6 @@
 @import 'tailwindcss';
-@import 'tw-animate-css';
 
+/* stylelint-disable */
 @custom-variant dark (&:is(.dark *));
 
 :root {

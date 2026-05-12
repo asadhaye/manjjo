@@ -250,7 +250,7 @@ function ProductCard({ product }: { product: Product }) {
     let spiceMultiplier = 1
 
     // Size pricing
-    if (product.variations?.sizes) {
+    if (Array.isArray(product.variations?.sizes)) {
       const sizeOption = product.variations.sizes.find(s => s.name === size)
       if (sizeOption) {
         sizeMultiplier = sizeOption.price / basePrice
@@ -258,7 +258,7 @@ function ProductCard({ product }: { product: Product }) {
     }
 
     // Spice pricing
-    if (product.variations?.spiceLevels) {
+    if (Array.isArray(product.variations?.spiceLevels)) {
       const spiceOption = product.variations.spiceLevels.find(s => s.name === spice)
       if (spiceOption) {
         spiceMultiplier = spiceOption.price / basePrice
@@ -332,7 +332,7 @@ function ProductCard({ product }: { product: Product }) {
             {/* Modal Content */}
             <div className="p-4 space-y-4">
               {/* Size Selection */}
-              {product.variations?.sizes && product.variations.sizes.length > 0 && (
+              {Array.isArray(product.variations?.sizes) && product.variations.sizes.length > 0 && (
                 <div>
                   <h3 className="font-medium text-manjjo-red mb-2">Choose Size</h3>
                   <div className="grid grid-cols-3 gap-2">
@@ -357,7 +357,7 @@ function ProductCard({ product }: { product: Product }) {
               )}
 
               {/* Spice Level Selection */}
-              {product.variations?.spiceLevels && product.variations.spiceLevels.length > 0 && (
+              {Array.isArray(product.variations?.spiceLevels) && product.variations.spiceLevels.length > 0 && (
                 <div>
                   <h3 className="font-medium text-manjjo-red mb-2">Choose Spice Level</h3>
                   <div className="grid grid-cols-2 gap-2">

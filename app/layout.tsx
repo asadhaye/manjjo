@@ -1,5 +1,5 @@
 import React from "react"
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Poppins } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { CartProvider } from '@/contexts/cart-context'
@@ -16,15 +16,21 @@ export const metadata: Metadata = {
   generator: 'v0.app',
   manifest: '/manifest.json',
   icons: {
-    icon: '/images/manjjo.png',
-    apple: '/images/manjjo.png',
+    icon: [
+      { url: '/favicon.ico', sizes: '32x32' },
+      { url: '/images/manjjo.png', type: 'image/png' },
+    ],
+    apple: '/images/favicon/apple-touch-icon.png',
   },
-  themeColor: '#FFAE42',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
     title: 'Manjjo',
   },
+}
+
+export const viewport: Viewport = {
+  themeColor: '#FFAE42',
 }
 
 export default function RootLayout({

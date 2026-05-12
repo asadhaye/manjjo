@@ -35,4 +35,6 @@ export default withPWA({
   register: true,
   skipWaiting: true,
   disable: process.env.NODE_ENV === 'development',
+  // Change this version to force users to update their cached app
+  version: '1.0.1',
 })(nextConfig)

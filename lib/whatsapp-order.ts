@@ -118,7 +118,7 @@ export class WhatsAppCart {
     const orderId = generateOrderId()
     const orderData: OrderData = {
       orderId,
-      customerName: customerInfo?.phone || '',
+      customerName: '',
       phoneNumber: customerInfo?.phone || '',
       deliveryAddress: customerInfo?.address || '',
       deliveryTime: customerInfo?.deliveryTime || 'ASAP',
