@@ -30,7 +30,7 @@ export function Header() {
         <Link href="/" className="flex items-center transition-opacity hover:opacity-80">
           <div className="overflow-hidden rounded-lg px-3 py-1.5">
             <Image
-              src="/images/MANJJO LUBAB.png"
+              src="/images/manjjo-lubab.jpeg"
               alt="Manjjo Logo"
               width={147}
               height={47}
