@@ -12,7 +12,7 @@ interface CartContextType {
   getTotalPrice: () => number
   getItems: () => any[]
   clearCart: () => void
-  shareToWhatsApp: (customerInfo?: { phone: string; address: string; deliveryTime: string }) => void
+  shareToWhatsApp: (customerInfo?: { phone: string; address: string; deliveryTime: string; branchId: string }) => void
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined)
@@ -46,7 +46,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     forceUpdate()
   }
 
-  const shareToWhatsApp = (customerInfo?: { phone: string; address: string; deliveryTime: string }) => {
+  const shareToWhatsApp = (customerInfo?: { phone: string; address: string; deliveryTime: string; branchId: string }) => {
     const whatsappUrl = cart.generateWhatsAppMessage('923098009999', customerInfo)
     window.open(whatsappUrl, '_blank')
   }
