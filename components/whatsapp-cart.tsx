@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { ShoppingCart, X, MessageCircle, ArrowRight } from "lucide-react"
 import { useCart } from "@/contexts/cart-context"
 import { validateDeliveryAddress } from "@/lib/geocoding"
@@ -22,6 +22,25 @@ export function WhatsAppCartButton() {
   useEffect(() => {
     setMounted(true)
   }, [])
+
+  // Debounced address validation
+  const debouncedValidation = useCallback(
+    (address: string) => {
+      const validation = validateDeliveryAddress(address)
+      setAddressError(validation.valid ? '' : validation.message)
+    },
+    []
+  )
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (customerInfo.address) {
+        debouncedValidation(customerInfo.address)
+      }
+    }, 300)
+
+    return () => clearTimeout(timer)
+  }, [customerInfo.address, debouncedValidation])
 
   const items = getItems()
   const totalItems = getTotalItems()
@@ -211,10 +230,7 @@ export function WhatsAppCartButton() {
                       </label>
                       <textarea
                         value={customerInfo.address}
-                        onChange={(e) => {
-                          setCustomerInfo(prev => ({ ...prev, address: e.target.value }))
-                          setAddressError('')
-                        }}
+                        onChange={(e) => setCustomerInfo(prev => ({ ...prev, address: e.target.value }))}
                         placeholder="House #123, Street XYZ, Lahore"
                         rows={2}
                         className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-manjjo-red focus:border-transparent ${
