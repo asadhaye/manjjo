@@ -25,7 +25,10 @@ export function Footer() {
             className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors text-center"
           >
             <MapPin className="h-5 w-5 shrink-0 text-manjjo-red" style={{ color: "#FFAE42" }} />
-            <span className="text-sm">24 D Block Rd, Block D Punjab CHS, Lahore, Pakistan</span>
+            <span className="text-sm">9C Commercial, Punjab Cooperative Housing Society, Phase 4, Lahore, Pakistan</span>
+
+            <MapPin className="h-5 w-5 shrink-0 text-manjjo-red" style={{ color: "#FFAE42" }} />
+            <span className="text-sm">Hascol Petrol Station, 18 Abu Bakar Block, Garden Town, Lahore, Pakistan</span>
           </a>
           
           <a
