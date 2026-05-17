@@ -40,6 +40,9 @@ export interface OrderData {
   phoneNumber?: string
   deliveryAddress?: string
   deliveryTime?: string
+  branchId?: string
+  branchName?: string
+  branchAddress?: string
   items: Array<{
     id: number
     name: string

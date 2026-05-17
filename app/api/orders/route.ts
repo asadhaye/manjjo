@@ -40,7 +40,7 @@ export async function POST(request: Request) {
     // Append order to the "Orders" sheet
     const response = await sheets.spreadsheets.values.append({
       spreadsheetId: SPREADSHEET_ID,
-      range: 'Orders!A:I',
+      range: 'Orders!A:L',
       valueInputOption: 'USER_ENTERED',
       requestBody: {
         values: [
@@ -50,6 +50,9 @@ export async function POST(request: Request) {
             orderData.phoneNumber || '',
             orderData.deliveryAddress || '',
             orderData.deliveryTime || 'ASAP',
+            orderData.branchId || '',
+            orderData.branchName || '',
+            orderData.branchAddress || '',
             JSON.stringify(orderData.items),
             orderData.totalPrice,
             orderData.status,

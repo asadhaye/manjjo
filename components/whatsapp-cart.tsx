@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { ShoppingCart, X, MessageCircle, ArrowRight } from "lucide-react"
 import { useCart } from "@/contexts/cart-context"
 import { validateDeliveryAddress } from "@/lib/geocoding"
+import { BRANCHES } from "@/lib/branches"
 
 export function WhatsAppCartButton() {
   const [isOpen, setIsOpen] = useState(false)
@@ -11,7 +12,8 @@ export function WhatsAppCartButton() {
   const [customerInfo, setCustomerInfo] = useState({
     phone: '',
     address: '',
-    deliveryTime: 'ASAP'
+    deliveryTime: 'ASAP',
+    branchId: ''
   })
   const [mounted, setMounted] = useState(false)
   const [addressError, setAddressError] = useState('')
@@ -26,6 +28,12 @@ export function WhatsAppCartButton() {
   const totalPrice = getTotalPrice()
 
   const handleCustomerInfoSubmit = () => {
+    // Validate branch selection
+    if (!customerInfo.branchId) {
+      alert('Please select your nearest branch')
+      return
+    }
+    
     // Validate phone number (Pakistani format: 03XXXXXXXXX)
     const phoneRegex = /^03[0-9]{9}$/
     const cleanedPhone = customerInfo.phone.replace(/[\s-]/g, '')
@@ -166,6 +174,24 @@ export function WhatsAppCartButton() {
                   </button>
                 ) : (
                   <div className="space-y-3">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Select Branch *
+                      </label>
+                      <select
+                        value={customerInfo.branchId}
+                        onChange={(e) => setCustomerInfo(prev => ({ ...prev, branchId: e.target.value }))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-manjjo-red focus:border-transparent"
+                      >
+                        <option value="">Choose nearest branch</option>
+                        {BRANCHES.map(branch => (
+                          <option key={branch.id} value={branch.id}>
+                            {branch.name} - {branch.area}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
                         Phone Number *

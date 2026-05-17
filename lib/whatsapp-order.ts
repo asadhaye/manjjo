@@ -1,4 +1,5 @@
 import { saveOrderData, generateOrderId, OrderData } from './google-sheets'
+import { getBranchById } from './branches'
 
 interface CartItem {
   id: number
@@ -112,16 +113,21 @@ export class WhatsAppCart {
     this.saveToStorage()
   }
 
-  generateWhatsAppMessage(phoneNumber: string = '923098009999', customerInfo?: { phone: string; address: string; deliveryTime: string }): string {
+  generateWhatsAppMessage(phoneNumber: string = '923098009999', customerInfo?: { phone: string; address: string; deliveryTime: string; branchId: string }): string {
     if (this.items.length === 0) return ''
 
     const orderId = generateOrderId()
+    const branch = customerInfo?.branchId ? getBranchById(customerInfo.branchId) : undefined
+    
     const orderData: OrderData = {
       orderId,
       customerName: '',
       phoneNumber: customerInfo?.phone || '',
       deliveryAddress: customerInfo?.address || '',
       deliveryTime: customerInfo?.deliveryTime || 'ASAP',
+      branchId: customerInfo?.branchId,
+      branchName: branch?.name,
+      branchAddress: branch?.address,
       items: this.items,
       totalPrice: this.getTotalPrice(),
       status: 'pending',
@@ -135,6 +141,9 @@ export class WhatsAppCart {
 
     const message = [
       '🍔 *Manjjo Food Order*',
+      '',
+      '🏪 *Branch:*',
+      branch ? `${branch.name} (${branch.area})` : '[Branch not selected]',
       '',
       '📋 *Order Details:*',
       ...this.items.map(item => 
@@ -150,9 +159,14 @@ export class WhatsAppCart {
       customerInfo?.phone || '[Please add your phone number]',
       '',
       '⏰ *Delivery Time:*',
-      customerInfo?.deliveryTime || '[ASAP / Preferred time]'
+      customerInfo?.deliveryTime || 'ASAP',
+      '',
+      `🆔 *Order ID:* ${orderId}`
     ].join('\n')
 
-    return `https://wa.me/${phoneNumber.replace(/[^\d]/g, '')}?text=${encodeURIComponent(message)}`
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
+    window.open(whatsappUrl, '_blank')
+    
+    return message
   }
 }
